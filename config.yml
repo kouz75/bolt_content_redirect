@@ -1,0 +1,3 @@
+# The HTTP status code to use for the redirects – either 301 or 302.
+# See README.md.
+status_code: 302
