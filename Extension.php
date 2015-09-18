@@ -37,7 +37,7 @@ class Extension extends BaseExtension {
     // Look for a migrated article with this URL path.
     $requested_path = $request->getPathInfo();
 
-    if ($redirect->load($requested_path)) {
+    if ($this->isRedirectable($requested_path) && $redirect->load($requested_path)) {
       $status_code = $redirect->code;
       $status_code = empty($status_code) ? $this->config['status_code'] : $status_code;
       $status_code = !in_array($status_code, [301, 302]) ? 302 : $status_code;
@@ -49,6 +49,19 @@ class Extension extends BaseExtension {
         return false;
       }
     }
+  }
+
+  public function isRedirectable($path) {
+    $blacklist = [
+      '/^\/$/',
+      '/^\/bolt.*$/',
+    ];
+    foreach ($blacklist as $pattern) {
+      if (preg_match($pattern, $path)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public function dbCheck() {
