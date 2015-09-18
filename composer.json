@@ -21,7 +21,7 @@
       "init.php"
     ],
     "psr-4": {
-      "Bolt\\Extension\\SthlmConnection\\ManyRedirects\\": ""
+      "Bolt\\Extension\\SthlmConnection\\ManyRedirects\\": ["", "src/"]
     }
   },
   "extra": {
