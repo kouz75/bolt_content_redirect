@@ -11,7 +11,7 @@ class Redirect {
   public $source;
   public $contentId;
   public $contentType;
-  public $code;
+  public $code = null;
 
   public function __construct($db_connection, $table_name, $values = []) {
     $this->dbConnection = $db_connection;
@@ -25,9 +25,7 @@ class Redirect {
   }
 
   public function save() {
-    if ($this->code && !in_array($this->code, [301, 302])) {
-      $this->code = 302;
-    }
+    $this->assertValidCode();
 
     $values = array(
       'source' => $this->source,
@@ -64,6 +62,12 @@ class Redirect {
     }
 
     return !empty($record);
+  }
+
+  public function assertValidCode() {
+    if ($this->code != null && !in_array($this->code, [301, 302])) {
+      throw InvalidArgumentException('Code must be either null, 301 or 302.');
+    }
   }
 
 }
