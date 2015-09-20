@@ -20,6 +20,8 @@ class Extension extends BaseExtension {
   }
 
   public function initialize() {
+    $this->tableName = $this->getTableName();
+
     $self = $this;
 
     // Register this extension's actions as an early event.
@@ -65,7 +67,7 @@ class Extension extends BaseExtension {
   }
 
   public function dbCheck() {
-    $table = $this->tableName = $this->getTableName();
+    $table = $this->tableName;
     $this->app['integritychecker']->registerExtensionTable(
       function ($schema) use ($table) {
         $table = $schema->createTable($table);

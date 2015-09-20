@@ -7,7 +7,11 @@
     "migration"
   ],
   "require": {
-    "bolt/bolt": ">=2.0.0,<3.0.0"
+    "bolt/bolt": ">=2.0.0,<3.0.0",
+    "composer/composer": "1.0.*@dev"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
   },
   "license": "MIT",
   "authors": [
@@ -21,12 +25,17 @@
       "init.php"
     ],
     "psr-4": {
-      "Bolt\\Extension\\SthlmConnection\\ManyRedirects\\": ["", "src/"]
+      "Bolt\\Extension\\SthlmConnection\\ManyRedirects\\": ["", "src/"],
+      "Bolt\\Extension\\SthlmConnection\\ManyRedirects\\Tests\\": ["tests/"],
+      "Bolt\\Tests\\" : "vendor/bolt/bolt/tests/phpunit/unit/"
     }
   },
   "extra": {
     "branch-alias": {
       "dev-master": "1.0.*"
     }
+  },
+  "scripts": {
+    "test": "phpunit"
   }
 }

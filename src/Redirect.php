@@ -2,8 +2,6 @@
 
 namespace Bolt\Extension\SthlmConnection\ManyRedirects;
 
-use Bolt\Application;
-
 class Redirect {
 
   public $dbConnection;
@@ -17,7 +15,7 @@ class Redirect {
     $this->dbConnection = $db_connection;
     $this->tableName = $table_name;
 
-    foreach (['source', 'content_id', 'content_type', 'code'] as $key) {
+    foreach (['source', 'contentId', 'contentType', 'code'] as $key) {
       if (!empty($values[$key])) {
         $this->{$key} = $values[$key];
       }
@@ -66,7 +64,7 @@ class Redirect {
 
   public function assertValidCode() {
     if ($this->code != null && !in_array($this->code, [301, 302])) {
-      throw InvalidArgumentException('Code must be either null, 301 or 302.');
+      throw new \InvalidArgumentException('Code must be either null, 301 or 302.');
     }
   }
 
