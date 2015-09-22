@@ -30,12 +30,12 @@ class ExtensionTest extends AbstractManyRedirectsUnitTest {
       'contentType' => 'entries',
       'code' => 302,
     ];
-    $redirect = new Redirect($this->app['db'], $this->extension->tableName, $values);
+    $redirect = new Redirect($values);
     $redirect->save();
 
     $request = Request::create('/test');
 
     $response = $this->app->handle($request);
-    $this->assertTrue($response->isRedirect('http:///entry/test'));
+    $this->assertTrue($response->isRedirect('entry/test'));
   }
 }

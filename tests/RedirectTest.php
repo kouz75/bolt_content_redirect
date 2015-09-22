@@ -15,11 +15,11 @@ class RedirectTest extends AbstractManyRedirectsUnitTest {
       'contentType' => 'entries',
       'code' => 302,
     ];
-    $redirect = new Redirect($this->app['db'], $this->extension->tableName, $values);
+    $redirect = new Redirect($values);
     $redirect->save();
 
-    $new = new Redirect($this->app['db'], $this->extension->tableName);
-    $this->assertTrue($new->load('/redirect-test'));
+    $new = Redirect::load('/redirect-test');
+    $this->assertEquals(get_class($new), 'Bolt\Extension\SthlmConnection\ManyRedirects\Redirect');
   }
 
   public function testThrowsExceptionOnInvalidCode() {
@@ -31,7 +31,7 @@ class RedirectTest extends AbstractManyRedirectsUnitTest {
       'contentType' => 'entries',
       'code' => 200,
     ];
-    $redirect = new Redirect($this->app['db'], $this->extension->tableName, $values);
+    $redirect = new Redirect($values);
     $redirect->save();
   }
 

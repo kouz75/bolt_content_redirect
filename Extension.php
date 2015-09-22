@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Extension extends BaseExtension {
 
-  public $tableName;
-
   public function __construct(Application $app) {
     parent::__construct($app);
   }
@@ -20,32 +18,34 @@ class Extension extends BaseExtension {
   }
 
   public function initialize() {
-    $this->tableName = $this->getTableName();
+    Redirect::$dbConnection = $this->app['db'];
+    Redirect::$tableName = $this->getTableName();
 
-    $self = $this;
+    $extension = $this;
 
     // Register this extension's actions as an early event.
-    $this->app->before(function (Request $request) use ($self) {
-      if ($self->dbCheck()) {
-        return $self->handleRequest($request);
+    $this->app->before(function (Request $request) use ($extension) {
+      if ($extension->dbCheck()) {
+        return $extension->handleRequest($request);
       }
     }, SilexApplication::EARLY_EVENT);
   }
 
   public function handleRequest(Request $request) {
-    $app = $this->app;
-    $redirect = new Redirect($app['db'], $this->tableName);
-
     // Look for a migrated article with this URL path.
     $requested_path = $request->getPathInfo();
 
-    if ($this->isRedirectable($requested_path) && $redirect->load($requested_path)) {
+    if ($this->isRedirectable($requested_path) && $redirect = Redirect::load($requested_path)) {
       $status_code = $redirect->code;
       $status_code = empty($status_code) ? $this->config['status_code'] : $status_code;
-      $status_code = !in_array($status_code, [301, 302]) ? 302 : $status_code;
+      if (!in_array($status_code, Redirect::$validCodes)) {
+        $status_code = 302;
+        $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'manyredirects']);
+      }
+
       $record = $this->getContentRecord($redirect->contentType, $redirect->contentId);
       if ($record) {
-        return $app->redirect($app['paths']['rooturl'] . strtolower($record->getReference()), $status_code);
+        return $this->app->redirect($app['paths']['rooturl'] . strtolower($record->getReference()), $status_code);
       }
       else {
         return false;
@@ -67,7 +67,7 @@ class Extension extends BaseExtension {
   }
 
   public function dbCheck() {
-    $table = $this->tableName;
+    $table = $this->getTableName();
     $this->app['integritychecker']->registerExtensionTable(
       function ($schema) use ($table) {
         $table = $schema->createTable($table);
@@ -103,7 +103,7 @@ class Extension extends BaseExtension {
     $db_values = $this->app['db']->fetchAssoc($query, array($content_id));
     $record = $this->app['storage']->getContentObject($content_type, $db_values);
     if (!$record) {
-      $this->app['logger.system']->error("ManyRedirects: couldn't find content id '$content_id'.", ['event' => 'manyredirects']);
+      $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'manyredirects']);
     }
     return $record;
   }
