@@ -34,8 +34,34 @@ class ExtensionTest extends AbstractContentRedirectUnitTest {
     $redirect->save();
 
     $request = Request::create('/test');
-
     $response = $this->app->handle($request);
+
     $this->assertTrue($response->isRedirect('entry/test'));
+  }
+
+  public function testDefaultCode() {
+    $entry = new Content($this->app, 'entries');
+    $entry->setValue('title', 'Test');
+    $entry->setValue('slug', 'test-default-code');
+    $entry->setValue('ownerid', 1);
+    $entry->setValue('status', 'published');
+    $id = $this->app['storage']->saveContent($entry);
+
+    $values = [
+      'source' => '/test-default-code',
+      'contentId' => $id,
+      'contentType' => 'entries',
+      'code' => null,
+    ];
+    $redirect = new Redirect($values);
+    $redirect->save();
+
+    $request = Request::create('/test-default-code');
+    $response = $this->app->handle($request);
+
+    $default = $this->extension->config['default_status_code'];
+    $default = empty($default) ? 302 : $default;
+    $this->assertEquals($response->getStatusCode(), $default);
+
   }
 }
