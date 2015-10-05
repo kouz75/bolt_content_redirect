@@ -1,11 +1,11 @@
 <?php
-namespace Bolt\Extension\SthlmConnection\ManyRedirects\Tests;
+namespace Bolt\Extension\SthlmConnection\ContentRedirect\Tests;
 
 use Bolt\Tests\BoltUnitTest;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Extension;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Redirect;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Extension;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Redirect;
 
-abstract class AbstractManyRedirectsUnitTest extends BoltUnitTest {
+abstract class AbstractContentRedirectUnitTest extends BoltUnitTest {
   protected $app;
 
   protected $extension;

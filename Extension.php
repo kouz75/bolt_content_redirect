@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolt\Extension\SthlmConnection\ManyRedirects;
+namespace Bolt\Extension\SthlmConnection\ContentRedirect;
 
 use Bolt\Application;
 use Bolt\BaseExtension;
@@ -14,7 +14,7 @@ class Extension extends BaseExtension {
   }
 
   public function getName() {
-    return "ManyRedirects";
+    return "ContentRedirect";
   }
 
   public function initialize() {
@@ -37,10 +37,10 @@ class Extension extends BaseExtension {
 
     if ($this->isRedirectable($requested_path) && $redirect = Redirect::load($requested_path)) {
       $status_code = $redirect->code;
-      $status_code = empty($status_code) ? $this->config['status_code'] : $status_code;
+      $status_code = empty($status_code) ? $this->config['default_status_code'] : $status_code;
       if (!in_array($status_code, Redirect::$validCodes)) {
         $status_code = 302;
-        $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'manyredirects']);
+        $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'contentredirect']);
       }
 
       $record = $this->getContentRecord($redirect->contentType, $redirect->contentId);
@@ -93,7 +93,7 @@ class Extension extends BaseExtension {
     if (substr($prefix, -1, 1) != "_") {
       $prefix .= "_";
     }
-    return $prefix . 'many_redirects';
+    return $prefix . 'content_redirect';
   }
 
   public function getContentRecord($content_type, $content_id) {
@@ -103,7 +103,7 @@ class Extension extends BaseExtension {
     $db_values = $this->app['db']->fetchAssoc($query, array($content_id));
     $record = $this->app['storage']->getContentObject($content_type, $db_values);
     if (!$record) {
-      $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'manyredirects']);
+      $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
     }
     return $record;
   }

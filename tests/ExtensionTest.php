@@ -1,18 +1,18 @@
 <?php
 
-namespace Bolt\Extension\SthlmConnection\ManyRedirects\Tests;
+namespace Bolt\Extension\SthlmConnection\ContentRedirect\Tests;
 
 use Bolt\Tests\BoltUnitTest;
 use Bolt\Content;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Extension;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Redirect;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Tests\AbstractManyRedirectsUnitTest;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Extension;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Redirect;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Tests\AbstractContentRedirectUnitTest;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExtensionTest extends AbstractManyRedirectsUnitTest {
+class ExtensionTest extends AbstractContentRedirectUnitTest {
   public function testExtensionLoads() {
     $name = $this->extension->getName();
-    $this->assertSame($name, 'ManyRedirects');
+    $this->assertSame($name, 'ContentRedirect');
     $this->assertSame($this->extension, $this->app["extensions.$name"]);
   }
 

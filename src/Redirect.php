@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolt\Extension\SthlmConnection\ManyRedirects;
+namespace Bolt\Extension\SthlmConnection\ContentRedirect;
 
 class Redirect {
 

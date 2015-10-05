@@ -1,14 +1,14 @@
-Many Redirects for Bolt
-=======================
+Content Redirects for Bolt
+==========================
 
-This extension provides redirects for a potentially large number of paths that
-are stored in a database table.
+This extension provides redirects for content items from an arbitrary number of
+source paths.
 
 ## Background
 
 When migrating from an old site to Bolt, you will likely want the new site to
 redirect old URL paths to current ones, so that existing links to specific pages
-keep working.
+keep working. Same thing if you change the slug of a content item for example.
 
 [BoltRedirector](https://github.com/foundrycode/boltredirector) provides an
 existing solution for this where you put your redirects in a YML file. You can
@@ -21,8 +21,9 @@ can't generalize into a consistent pattern, the YML file becomes too limiting.
 ## How it works
 
 This extension looks at each request and checks if the current path exists in
-the `bolt_many_redirects` table. If so, it redirects to the specified article.
-(Beware: this adds an extra SQL query to every request, always.)
+the `bolt_content_redirect` table. If so, it redirects to the specified article.
+(Beware: this adds an extra SQL query to every request, always. The exception is
+the front page and anything beneith `/bolt`.)
 
 Redirects have four properties: `source` (`"/old/path"`), `content_type`
 (`"article"`), `id` (`1`), and `"code"` (`301` or `302`).

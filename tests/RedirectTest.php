@@ -1,13 +1,13 @@
 <?php
 
-namespace Bolt\Extension\SthlmConnection\ManyRedirects\Tests;
+namespace Bolt\Extension\SthlmConnection\ContentRedirect\Tests;
 
 use Bolt\Tests\BoltUnitTest;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Redirect;
-use Bolt\Extension\SthlmConnection\ManyRedirects\Tests\AbstractManyRedirectsUnitTest;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Redirect;
+use Bolt\Extension\SthlmConnection\ContentRedirect\Tests\AbstractContentRedirectUnitTest;
 
 
-class RedirectTest extends AbstractManyRedirectsUnitTest {
+class RedirectTest extends AbstractContentRedirectUnitTest {
   public function testSaveRedirect() {
     $values = [
       'source' => '/redirect-test',
@@ -19,7 +19,7 @@ class RedirectTest extends AbstractManyRedirectsUnitTest {
     $redirect->save();
 
     $new = Redirect::load('/redirect-test');
-    $this->assertEquals(get_class($new), 'Bolt\Extension\SthlmConnection\ManyRedirects\Redirect');
+    $this->assertEquals(get_class($new), 'Bolt\Extension\SthlmConnection\ContentRedirect\Redirect');
   }
 
   public function testThrowsExceptionOnInvalidCode() {
