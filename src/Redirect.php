@@ -39,6 +39,11 @@ class Redirect {
     return $redirect;
   }
 
+  static function exists($source) {
+    $existing = self::load($source);
+    return !empty($existing);
+  }
+
   public function save() {
     $this->assertValidCode();
 
@@ -49,20 +54,13 @@ class Redirect {
       'code' => $this->code,
     );
 
-    if ($this->exists($source)) {
-      $result = self::$dbConnection->update(self::$tableName, $values, $values);
+    if (self::exists($this->source)) {
+      $result = self::$dbConnection->update(self::$tableName, $values, ['source' => $this->source]);
     } else {
       $result = self::$dbConnection->insert(self::$tableName, $values);
     }
 
     return !!$result;
-  }
-
-  public function exists($source) {
-    $query = 'SELECT id FROM ' . self::$tableName . ' WHERE source = ?';
-    $record = self::$dbConnection->fetchAssoc($query, array($source));
-
-    return !empty($record);
   }
 
   public function assertValidCode() {
