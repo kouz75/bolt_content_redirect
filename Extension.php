@@ -45,7 +45,8 @@ class Extension extends BaseExtension {
 
       $record = $this->getContentRecord($redirect->contentType, $redirect->contentId);
       if ($record) {
-        return $this->app->redirect($app['paths']['rooturl'] . strtolower($record->getReference()), $status_code);
+        $root_url = trim($app['paths']['rooturl'], '/'); // Strip off the last '/'.
+        return $this->app->redirect($root_url . $record->link(), $status_code);
       }
       else {
         return false;

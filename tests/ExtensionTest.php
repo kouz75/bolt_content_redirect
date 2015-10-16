@@ -36,7 +36,7 @@ class ExtensionTest extends AbstractContentRedirectUnitTest {
     $request = Request::create('/test');
     $response = $this->app->handle($request);
 
-    $this->assertTrue($response->isRedirect('entry/test'));
+    $this->assertTrue($response->isRedirect('/entry/test'));
   }
 
   public function testDefaultCode() {
