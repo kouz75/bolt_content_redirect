@@ -43,12 +43,13 @@ class Extension extends BaseExtension {
         $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'contentredirect']);
       }
 
-      $record = $this->getContentRecord($redirect->contentType, $redirect->contentId);
+      $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
       if ($record) {
-        $root_url = trim($app['paths']['rooturl'], '/'); // Strip off the last '/'.
+        $root_url = trim($this->app['paths']['rooturl'], '/'); // Strip off the last '/'.
         return $this->app->redirect($root_url . $record->link(), $status_code);
       }
       else {
+        $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
         return false;
       }
     }
@@ -95,18 +96,6 @@ class Extension extends BaseExtension {
       $prefix .= "_";
     }
     return $prefix . 'content_redirect';
-  }
-
-  public function getContentRecord($content_type, $content_id) {
-    $prefix = $this->app['config']->get('general/database/prefix', 'bolt_');
-    $table = $prefix . $content_type;
-    $query = "SELECT * FROM $table WHERE id = ?";
-    $db_values = $this->app['db']->fetchAssoc($query, array($content_id));
-    $record = $this->app['storage']->getContentObject($content_type, $db_values);
-    if (!$record) {
-      $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
-    }
-    return $record;
   }
 
 }
