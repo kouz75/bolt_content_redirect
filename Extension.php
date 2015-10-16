@@ -45,9 +45,9 @@ class Extension extends BaseExtension {
 
       $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
       if ($record) {
-        $root_url = $this->app['paths']['rooturl'];
-        $record_link = substr($record->link(), 1);  // Strip off the first '/'.
-        return $this->app->redirect($root_url . $record_link, $status_code);
+        $root_path = $this->app['paths']['root'];
+        $record_path = substr($record->link(), 1);  // Strip off the first '/'.
+        return $this->app->redirect($root_path . $record_path, $status_code);
       }
       else {
         $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
