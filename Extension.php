@@ -39,8 +39,8 @@ class Extension extends BaseExtension {
       $status_code = $redirect->code;
       $status_code = empty($status_code) ? $this->config['default_status_code'] : $status_code;
       if (!in_array($status_code, Redirect::$validCodes)) {
-        $status_code = 302;
         $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'contentredirect']);
+        $status_code = 302;
       }
 
       $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
