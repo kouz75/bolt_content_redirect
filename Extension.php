@@ -43,7 +43,7 @@ class Extension extends BaseExtension {
         $status_code = 302;
       }
       if($redirect->contentId==0){
-                  return $this->app->redirect($redirect->destinationPath, $status_code);
+                  return $this->app->redirect($redirect->destination, $status_code);
       }else{
         $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
         if ($record) {
