@@ -34,16 +34,18 @@ class Extension extends BaseExtension {
   public function handleRequest(Request $request) {
     // Look for a migrated article with this URL path.
     $requested_path = $request->getPathInfo();
-
+    $redirect = Redirect::load($requested_path);
     if ($this->isRedirectable($requested_path) && $redirect = Redirect::load($requested_path)) {
       $status_code = $redirect->code;
       $status_code = empty($status_code) ? $this->config['default_status_code'] : $status_code;
+
       if (!in_array($status_code, Redirect::$validCodes)) {
         $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'contentredirect']);
         $status_code = 302;
       }
+
       if($redirect->contentId==0){
-                  return $this->app->redirect($redirect->destination, $status_code);
+        return $this->app->redirect($redirect->destination, $status_code);
       }else{
         $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
         if ($record) {
@@ -61,15 +63,7 @@ class Extension extends BaseExtension {
   }
 
   public function isRedirectable($path) {
-    $blacklist = [
-      '/^\/$/',
-      '/^\/bolt.*$/',
-    ];
-    foreach ($blacklist as $pattern) {
-      if (preg_match($pattern, $path)) {
-        return false;
-      }
-    }
+
     return true;
   }
 
