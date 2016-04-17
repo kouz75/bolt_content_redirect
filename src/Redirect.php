@@ -9,6 +9,7 @@ class Redirect {
   static $validCodes = [301, 302];
 
   public $source;
+  public $destination;
   public $contentId;
   public $contentType;
   public $code = null;
@@ -29,6 +30,7 @@ class Redirect {
     if (!empty($record)) {
       $values = [
         'source' => $record['source'],
+        'destination' => $record['destination'],
         'contentId' => $record['content_id'],
         'contentType' => $record['content_type'],
         'code' => $record['code'],
@@ -49,6 +51,7 @@ class Redirect {
 
     $values = array(
       'source' => $this->source,
+      'destination' => $this['destination'],
       'content_type' => $this->contentType,
       'content_id' => $this->contentId,
       'code' => $this->code,
