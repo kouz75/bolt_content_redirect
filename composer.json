@@ -1,5 +1,5 @@
 {
-  "name": "sthlmconnection/bolt_content_redirect",
+  "name": "kouz75/bolt_content_redirect",
   "description": "Redirects alternate/outdated paths to the right content.",
   "type": "bolt-extension",
   "keywords": [
