@@ -15,7 +15,7 @@ class Redirect {
   public $code = null;
 
   public function __construct($values = []) {
-    foreach (['source', 'contentId', 'contentType', 'code'] as $key) {
+    foreach (['source', 'destination', 'contentId', 'contentType', 'code'] as $key) {
       if (!empty($values[$key])) {
         $this->{$key} = $values[$key];
       }
