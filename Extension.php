@@ -79,8 +79,8 @@ class Extension extends BaseExtension {
       function ($schema) use ($table) {
         $table = $schema->createTable($table);
         $table->addColumn('id', 'integer', array('autoincrement' => true));
-        $table->addColumn('source', 'string', array('length' => 512));
-        $table->addColumn('destination', 'string', array('length' => 512));
+        $table->addColumn('source', 'string', array('length' => 128));
+        $table->addColumn('destination', 'string', array('length' => 128));
         $table->addColumn('content_type', 'string', array('length' => 128));
         $table->addColumn('content_id', 'integer');
         $table->addColumn('code', 'integer', array('length' => 3, 'default' => null, 'notnull' => false));
