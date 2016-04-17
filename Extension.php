@@ -42,17 +42,21 @@ class Extension extends BaseExtension {
         $this->app['logger.system']->error("Prevented an invalid HTTP code ($status_code) from being sent for '$requested_path'. Instead, used 302 as fallback.", ['event' => 'contentredirect']);
         $status_code = 302;
       }
+      if($redirect->contentId==0){
+                  return $this->app->redirect($redirect->destinationPath, $status_code);
+      }else{
+        $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
+        if ($record) {
+          $root_path = $this->app['paths']['root'];
+          $record_path = substr($record->link(), 1);  // Strip off the first '/'.
+          return $this->app->redirect($root_path . $record_path, $status_code);
+        }
+        else {
+          $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
+          return false;
+        }       
+      }
 
-      $record = $this->app['storage']->getContent("$redirect->contentType/$redirect->contentId");
-      if ($record) {
-        $root_path = $this->app['paths']['root'];
-        $record_path = substr($record->link(), 1);  // Strip off the first '/'.
-        return $this->app->redirect($root_path . $record_path, $status_code);
-      }
-      else {
-        $this->app['logger.system']->error("Couldn't find content with type '$content_type' and id '$content_id'.", ['event' => 'contentredirect']);
-        return false;
-      }
     }
   }
 
@@ -75,7 +79,8 @@ class Extension extends BaseExtension {
       function ($schema) use ($table) {
         $table = $schema->createTable($table);
         $table->addColumn('id', 'integer', array('autoincrement' => true));
-        $table->addColumn('source', 'string', array('length' => 128));
+        $table->addColumn('source', 'string', array('length' => 512));
+        $table->addColumn('destination', 'string', array('length' => 512));
         $table->addColumn('content_type', 'string', array('length' => 128));
         $table->addColumn('content_id', 'integer');
         $table->addColumn('code', 'integer', array('length' => 3, 'default' => null, 'notnull' => false));
